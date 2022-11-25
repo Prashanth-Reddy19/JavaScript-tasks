@@ -1,18 +1,20 @@
+// Query selector
+
+var secondItem=document.querySelector('.list-group-item:nth-Child(2)')
+secondItem.style.backgroundColor='green'
+
+var thirdItem=document.querySelector('.list-group-item:nth-child(3)')
+thirdItem.style.display='none'
 
 
-var items=document.getElementsByClassName('list-group-item')
-console.log(items)
-for(var i=0;i<items.length;i++){
-    items[i].style.backgroundColor='pink'
+//Query selectorAll
+
+var secondItem=document.querySelectorAll('li:nth-child(2)')
+console.log(secondItem[0])
+secondItem[0].style.color='green'
+ 
+var odd=document.querySelectorAll('li:nth-child(odd)')
+for(var i=0;i<odd.length;i++){
+    odd[i].style.backgroundColor='green'
 }
-
-
-var li=document.getElementsByTagName('li')
-console.log(li)
-for(var i=0;i<li.length;i++){
-    li[i].style.backgroundColor='pink'
-}
-
-
-
 
