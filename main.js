@@ -1,12 +1,10 @@
-var headerTitle=document.getElementById("header-title")
 
-headerTitle.style.borderBottom='solid 5px #000'
 
-var things=document.getElementsByClassName("card card-body")
-console.log(things)
-
-main.style.color='green'
-main.style.fontWeight='bold'
-
+var items=document.getElementsByClassName('list-group-item')
+console.log(items)
+items[2].style.backgroundColor='green'
+for(var i=0;i<items.length;i++){
+    items[i].style.fontWeight='bold'
+}
 
 
