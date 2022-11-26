@@ -16,7 +16,7 @@
   <body>
     <h1>Appoinment Form</h1>
     <form onsubmit="saveToLocalStorage(event)">
-      <label>username</label><br>
+      <label>Name</label><br>
       <input type="text" name="username" required><br>
       <label>Email Id</label><br>
       <input type="email" name="email" required><br>
@@ -28,14 +28,20 @@
     <script>
            function saveToLocalStorage(event){
             event.preventDefault();
-            var username=event.target.username.value;
+            var name=event.target.username.value;
             var email=event.target.email.value;
             var mobile=event.target.mobile.value;
            
-            localStorage.setItem('name',name);
-            localStorage.setItem('email',email);
-            localStorage.setItem('mobile',mobile);
-            
+            localStorage.setItem('name', name);
+            localStorage.setItem('email', email);
+            localStorage.setItem('mobile', mobile);
+
+           var obj={
+            name,
+            email,
+            mobile
+           } 
+            localStorage.setItem('userdetails', JSON.stringify(obj))
            }
     </script>
   </body>
