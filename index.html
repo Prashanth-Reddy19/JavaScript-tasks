@@ -32,16 +32,16 @@
             var email=event.target.email.value;
             var mobile=event.target.mobile.value;
            
-            localStorage.setItem('name', name);
-            localStorage.setItem('email', email);
-            localStorage.setItem('mobile', mobile);
+           // localStorage.setItem('name', name);
+           // localStorage.setItem('email', email);
+            //localStorage.setItem('mobile', mobile);
 
            var obj={
             name,
             email,
             mobile
            } 
-            localStorage.setItem('userdetails', JSON.stringify(obj))
+            localStorage.setItem(obj.email, JSON.stringify(obj))
            }
     </script>
   </body>
