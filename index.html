@@ -17,14 +17,16 @@
     <h1>Appoinment Form</h1>
     <form onsubmit="saveToLocalStorage(event)">
       <label>Name</label><br>
-      <input type="text" name="username" required><br>
+      <input id='username' type="text" name="username" required><br>
       <label>Email Id</label><br>
-      <input type="email" name="email" required><br>
+      <input id="email" type="email" name="emailId" required><br>
       <label>Mobile </label><br>
-      <input type="tel" name="mobile" required><br><br>
+      <input id="mobile" type="tel" name="mobile" required><br><br>
       <button>submit</button>
-      
     </form>
+      <ul id="listOfUsers"></ul>
+      
+    
     <script>
            function saveToLocalStorage(event){
             event.preventDefault();
@@ -42,7 +44,67 @@
             mobile
            } 
             localStorage.setItem(obj.email, JSON.stringify(obj))
-           }
-    </script>
-  </body>
-</html>
+            showListofRegisteredUser(obj)
+          }
+
+          window.addEventListener("DOMContentLoaded", () => {
+            const localStorageObj = localStorage;
+            const localstoragekeys  = Object.keys(localStorageObj)
+
+            for(var i =0; i< localstoragekeys.length; i++){
+                const key = localstoragekeys[i]
+                const userDetailsString = localStorageObj[key];
+                const userDetailsObj = JSON.parse(userDetailsString);
+                showNewUserOnScreen(userDetailsObj)
+            }
+        })
+
+        function showNewUserOnScreen(user){
+
+          if(localStorage.getItem(user.email) !==null){
+            removeUserFromScreen(user.email)
+          }
+            const parentNode = document.getElementById('listOfUsers');
+            const childHTML = `<li id=${user.email}> ${user.name} - ${user.email}
+              <button onclick=deleteUser('${user.email}')> Delete User </button>
+              <button onclick=editUserDetails(${user.email}','${user.name}','${user.mobile}')>Edit User</button>
+              
+           </li>`
+
+            parentNode.innerHTML = parentNode.innerHTML + childHTML;
+        }
+        
+        //Edit user
+  function editUserDetails(emailId, name, phonenumber){
+
+    document.getElementById('email').value = emailId;
+    document.getElementById('username').value = name;
+    document.getElementById('mobile').value =mobile;
+
+    deleteUser(emailId)
+ 
+  }
+    // delete user email
+
+    function deleteUser(emailId){
+      console.log(emailId)
+      localStorage.removeItem(emailId);
+      removeUserFromScreen(emailId);
+
+  }
+
+  function removeUserFromScreen(emailId){
+      const parentNode = document.getElementById('listOfUsers');
+      const childNodeToBeDeleted = document.getElementById(emailId);
+      if(childNodeToBeDeleted){
+      
+      parentNode.removeChild(childNodeToBeDeleted)
+  }
+
+  
+
+}
+</script>
+
+
+ 
