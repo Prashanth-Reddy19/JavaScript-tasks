@@ -95,9 +95,9 @@
         removeUserFromScreen(user.email)
       }
       const parentNode = document.getElementById('listOfUsers');
-      const childHTML = `<li id=${user._d}> ${user.name} - ${user.email}
+      const childHTML = `<li id=${user._id}> ${user.name} - ${user.email}
               <button onclick=deleteUser('${user._id}')> Delete User </button>
-              <button onclick=editUserDetails('${user._id}','${user.name}','${user.mobile}')>Edit User</button>
+              <button onclick=editUserDetails('${user.email}','${user.name}','${user.mobile}','${user._id}')>Edit User</button>
               
            </li>`
 
@@ -131,13 +131,14 @@
     }
 
     //Edit user
-    function editUserDetails(emailId, name, phonenumber) {
+    function editUserDetails(emailId, name, phonenumber,userId) {
+     
 
       document.getElementById('email').value = emailId;
       document.getElementById('username').value = name;
       document.getElementById('mobile').value = mobile;
 
-      deleteUser(emailId)
+      deleteUser(userId)
     
     }
 </script>
