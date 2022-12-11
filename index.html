@@ -1,5 +1,4 @@
 <html>
-
 <head>
   <title>Appoinment</title>
   <style>
@@ -90,13 +89,15 @@
 
     function showNewUserOnScreen(user) {
 
+      
+
       if (localStorage.getItem(user.email) !== null) {
         removeUserFromScreen(user.email)
       }
       const parentNode = document.getElementById('listOfUsers');
-      const childHTML = `<li id=${user.email}> ${user.name} - ${user.email}
-              <button onclick=deleteUser('${user.email}')> Delete User </button>
-              <button onclick=editUserDetails(${user.email}','${user.name}','${user.mobile}')>Edit User</button>
+      const childHTML = `<li id=${user._d}> ${user.name} - ${user.email}
+              <button onclick=deleteUser('${user._id}')> Delete User </button>
+              <button onclick=editUserDetails('${user._id}','${user.name}','${user.mobile}')>Edit User</button>
               
            </li>`
 
@@ -106,16 +107,23 @@
 
     // delete user email
 
-    function deleteUser(emailId) {
-      console.log(emailId)
-      localStorage.removeItem(emailId);
-      removeUserFromScreen(emailId);
+    function deleteUser(userId) {
+      axios.delete(`https://crudcrud.com/api/a10acadf7b454199bcf35bfb7615dc12/appointmentData/${userId}`)
+           .then((response) => {
+            removeUserFromScreen(userId)
+           })
+           .catch((err) => {
+            console.log(err)
+           })
+      //console.log(emailId)
+      //localStorage.removeItem(emailId);
+      //removeUserFromScreen(emailId);
 
     }
 
-    function removeUserFromScreen(emailId) {
+    function removeUserFromScreen(userId) {
       const parentNode = document.getElementById('listOfUsers');
-      const childNodeToBeDeleted = document.getElementById(emailId);
+      const childNodeToBeDeleted = document.getElementById(userId);
       if (childNodeToBeDeleted) {
 
         parentNode.removeChild(childNodeToBeDeleted)
@@ -130,9 +138,9 @@
       document.getElementById('mobile').value = mobile;
 
       deleteUser(emailId)
-
+    
     }
-  </script>
+</script>
 </body>
 
 </html>
