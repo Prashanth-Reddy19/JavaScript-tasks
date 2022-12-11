@@ -1,110 +1,124 @@
 <html>
-  <head>
-    <title>Appoinment</title>
-    <style>
-      form{
-        background-color: aqua;
-        text-align: center;
-        color: black;
+
+<head>
+  <title>Appoinment</title>
+  <style>
+    form {
+      background-color: aqua;
+      text-align: center;
+      color: black;
+    }
+
+    h1 {
+      text-align: center;
+      color: brown;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Appoinment Form</h1>
+  <form onsubmit="saveToLocalStorage(event)">
+    <label>Name</label><br>
+    <input id='username' type="text" name="username" required><br>
+    <label>Email Id</label><br>
+    <input id="email" type="email" name="emailId" required><br>
+    <label>Mobile </label><br>
+    <input id="mobile" type="tel" name="mobile" required><br><br>
+    <button>submit</button>
+  </form>
+  <ul id="listOfUsers"></ul>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+
+
+  <script>
+    function saveToLocalStorage(event) {
+      event.preventDefault();
+      var name = event.target.username.value;
+      var email = event.target.email.value;
+      var mobile = event.target.mobile.value;
+
+      // localStorage.setItem('name', name);
+      // localStorage.setItem('email', email);
+      //localStorage.setItem('mobile', mobile);
+
+      var obj = {
+        name,
+        email,
+        mobile
       }
-      h1{
-        text-align: center;
-        color: brown;
+
+      axios.post('https://crudcrud.com/api/a10acadf7b454199bcf35bfb7615dc12/appointmentData',obj)
+      .then((response) => {
+        showNewUserOnScreen(response.data)
+        console.log(response)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+
+
+      //localStorage.setItem(obj.email, JSON.stringify(obj))
+      //showListofRegisteredUser(obj)
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const localStorageObj = localStorage;
+      const localstoragekeys = Object.keys(localStorageObj)
+
+      for (var i = 0; i < localstoragekeys.length; i++) {
+        const key = localstoragekeys[i]
+        const userDetailsString = localStorageObj[key];
+        const userDetailsObj = JSON.parse(userDetailsString);
+        showNewUserOnScreen(userDetailsObj)
       }
-    </style>
-  </head>
-  <body>
-    <h1>Appoinment Form</h1>
-    <form onsubmit="saveToLocalStorage(event)">
-      <label>Name</label><br>
-      <input id='username' type="text" name="username" required><br>
-      <label>Email Id</label><br>
-      <input id="email" type="email" name="emailId" required><br>
-      <label>Mobile </label><br>
-      <input id="mobile" type="tel" name="mobile" required><br><br>
-      <button>submit</button>
-    </form>
-      <ul id="listOfUsers"></ul>
-      
-    
-    <script>
-           function saveToLocalStorage(event){
-            event.preventDefault();
-            var name=event.target.username.value;
-            var email=event.target.email.value;
-            var mobile=event.target.mobile.value;
-           
-           // localStorage.setItem('name', name);
-           // localStorage.setItem('email', email);
-            //localStorage.setItem('mobile', mobile);
+    })
 
-           var obj={
-            name,
-            email,
-            mobile
-           } 
-            localStorage.setItem(obj.email, JSON.stringify(obj))
-            showListofRegisteredUser(obj)
-          }
+    function showNewUserOnScreen(user) {
 
-          window.addEventListener("DOMContentLoaded", () => {
-            const localStorageObj = localStorage;
-            const localstoragekeys  = Object.keys(localStorageObj)
-
-            for(var i =0; i< localstoragekeys.length; i++){
-                const key = localstoragekeys[i]
-                const userDetailsString = localStorageObj[key];
-                const userDetailsObj = JSON.parse(userDetailsString);
-                showNewUserOnScreen(userDetailsObj)
-            }
-        })
-
-        function showNewUserOnScreen(user){
-
-          if(localStorage.getItem(user.email) !==null){
-            removeUserFromScreen(user.email)
-          }
-            const parentNode = document.getElementById('listOfUsers');
-            const childHTML = `<li id=${user.email}> ${user.name} - ${user.email}
+      if (localStorage.getItem(user.email) !== null) {
+        removeUserFromScreen(user.email)
+      }
+      const parentNode = document.getElementById('listOfUsers');
+      const childHTML = `<li id=${user.email}> ${user.name} - ${user.email}
               <button onclick=deleteUser('${user.email}')> Delete User </button>
               <button onclick=editUserDetails(${user.email}','${user.name}','${user.mobile}')>Edit User</button>
               
            </li>`
 
-            parentNode.innerHTML = parentNode.innerHTML + childHTML;
-        }
-        
-        //Edit user
-  function editUserDetails(emailId, name, phonenumber){
+      parentNode.innerHTML = parentNode.innerHTML + childHTML;
+    }
 
-    document.getElementById('email').value = emailId;
-    document.getElementById('username').value = name;
-    document.getElementById('mobile').value =mobile;
 
-    deleteUser(emailId)
- 
-  }
     // delete user email
 
-    function deleteUser(emailId){
+    function deleteUser(emailId) {
       console.log(emailId)
       localStorage.removeItem(emailId);
       removeUserFromScreen(emailId);
 
-  }
+    }
 
-  function removeUserFromScreen(emailId){
+    function removeUserFromScreen(emailId) {
       const parentNode = document.getElementById('listOfUsers');
       const childNodeToBeDeleted = document.getElementById(emailId);
-      if(childNodeToBeDeleted){
-      
-      parentNode.removeChild(childNodeToBeDeleted)
-  }
+      if (childNodeToBeDeleted) {
 
-  
+        parentNode.removeChild(childNodeToBeDeleted)
+      }
+    }
 
-}
-</script>
+    //Edit user
+    function editUserDetails(emailId, name, phonenumber) {
 
+      document.getElementById('email').value = emailId;
+      document.getElementById('username').value = name;
+      document.getElementById('mobile').value = mobile;
 
- 
+      deleteUser(emailId)
+
+    }
+  </script>
+</body>
+
+</html>
