@@ -1,126 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        body{
+        body {
             background-image: url('852.jpeg');
             text-align: center;
         }
-        label{
+
+        label {
             font-size: 20px;
-            
+
         }
-       h1{
-       color:brown;
-       }
-     
-        button{
+
+        h1 {
+            color: brown;
+        }
+
+        button {
             width: 250px;
-            color:black;
+            color: black;
             background-color: orange;
             font-size: large;
         }
-        input{
+
+        input {
             width: 250px;
             padding: 3px;
         }
-        li{
+
+        li {
             font-size: large;
             color: darkblue;
             text-align: center;
         }
-            
-
-      
     </style>
-   
-</head>
-<body>
-   <h1>Expense Tracker</h1>
-   <form  onsubmit="saveToLocalStorage(event)">
-    <label>Choose Expense amount</label><br>
-    <input id="expense" type="number" name="expense" required><br>
-    <label>Choose Description</label><br>
-    <input id="description" type="text" name="description" required><br>
-    <label for="cars">Choose category</label><br>
-  <select name="cars" id="cars" style="width: 250px;"><br>
-    <option value="select">select</option>
-    <option value="volvo">Volvo</option>
-    <option value="saab">Saab</option>
-    <option value="opel">Opel</option>
-    <option value="audi">Audi</option>
-  </select><br><br>
-   <button>Add Expense</button>
-</form>
-<ul id="listOfUsers"></ul>
-<script>
-    function saveToLocalStorage(event){
-        event.preventDefault();
-        var expense=event.target.expense.value;
-        var description=event.target.description.value;
-        var cars=event.target.cars.value;
-  
-            var obj={
-            expense,
-            description,
-            cars
-           } 
-            localStorage.setItem(obj.expense, JSON.stringify(obj))
-            
-          }
-          window.addEventListener("DOMContentLoaded", () => {
-            const localStorageObj = localStorage;
-            const localstoragekeys  = Object.keys(localStorageObj)
 
-            for(var i =0; i< localstoragekeys.length; i++){
-                const key = localstoragekeys[i]
-                const userDetailsString = localStorageObj[key];
-                const userDetailsObj = JSON.parse(userDetailsString);
-                showNewUserOnScreen(userDetailsObj)
+</head>
+
+<body>
+    <h1>Expense Tracker</h1>
+    <form onsubmit="saveToLocalStorage(event)">
+        <label>Choose Expense amount</label><br>
+        <input id="expense" type="number" name="expense" required><br>
+        <label>Choose Description</label><br>
+        <input id="description" type="text" name="description" required><br>
+        <label for="cars">Choose category</label><br>
+        <select name="cars" id="cars" style="width: 250px;"><br>
+            <option value="select">select</option>
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="opel">Opel</option>
+            <option value="audi">Audi</option>
+        </select><br><br>
+        <button>Add Expense</button>
+    </form>
+    <ol id="listOfUsers"></ol>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+    <script>
+        function saveToLocalStorage(event) {
+            event.preventDefault();
+            var expense = event.target.expense.value;
+            var description = event.target.description.value;
+            var cars = event.target.cars.value;
+
+            var obj = {
+                expense,
+                description,
+                cars
             }
+
+            axios.post("https://crudcrud.com/api/47ddf61c9f1641ed8c66ea49a7e3f6c5/expenseData", obj)
+                .then((response) => {
+                    showNewUserOnScreen(response.data)
+                    // console.log(response)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            //localStorage.setItem(obj.expense, JSON.stringify(obj))
+            //showNewUserOnScreen(obj)
+
+        }
+        window.addEventListener("DOMContentLoaded", () => {
+            axios.get('https://crudcrud.com/api/47ddf61c9f1641ed8c66ea49a7e3f6c5/expenseData')
+                .then((response) => {
+                    console.log(response)
+                    for (var i = 0; i < response.data.length; i++) {
+                        showNewUserOnScreen(response.data[i])
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+
+
         })
 
-        function showNewUserOnScreen(user){
+        function showNewUserOnScreen(user) {
 
-          const parentNode = document.getElementById('listOfUsers');
-            const childHTML = `<li id=${user.expense}> ${user.expense} - ${user.description} - ${user.cars}
-              <button onclick=deleteUser('${user.expense}')> Delete User </button>
-              <button onclick="editUserDetails('${user.expense}','${user.description}','${user.cars}')">Edit User</button>
+
+            const parentNode = document.getElementById('listOfUsers');
+            const childHTML = `<li id=${user._id}> ${user.expense} - ${user.description} - ${user.cars}
+              <button onclick=deleteUser('${user._id}')> Delete User </button>
+              <button onclick="editUserDetails('${user.expense}','${user.description}','${user.cars}','${user._id}')">Edit User</button>
               
            </li>`
 
             parentNode.innerHTML = parentNode.innerHTML + childHTML;
         }
 
-        function deleteUser(expense){
+        function deleteUser(userId) {
+            axios.delete(`https://crudcrud.com/api/47ddf61c9f1641ed8c66ea49a7e3f6c5/expenseData/${userId}`)
+                .then((response) => {
+                    removeUserFromScreen(userId)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+
             console.log(expense)
             localStorage.removeItem(expense);
             removeUserFromScreen(expense);
-      
+
         }
-      
-        function removeUserFromScreen(expense){
+
+        function removeUserFromScreen(userId) {
             const parentNode = document.getElementById('listOfUsers');
-            const childNodeToBeDeleted = document.getElementById(expense);
-            if(childNodeToBeDeleted){
-            
-            parentNode.removeChild(childNodeToBeDeleted)
+            const childNodeToBeDeleted = document.getElementById(userId);
+            if (childNodeToBeDeleted) {
+
+                parentNode.removeChild(childNodeToBeDeleted)
+            }
         }
-    }
-      
-        function editUserDetails(expense, description, cars){
+
+        function editUserDetails(expense, description, cars, userId) {
 
             document.getElementById('expense').value = expense;
             document.getElementById('description').value = description;
-            document.getElementById('cars').value =cars;
-        
-            deleteUser(expense)
+            document.getElementById('cars').value = cars;
+
+            deleteUser(userId)
         }
-      
-</script>
+
+    </script>
 </body>
+
 </html>
